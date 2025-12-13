@@ -12,12 +12,28 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 const profileSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  country: z.string().min(1, "Please select a country"),
   pincode: z.string().regex(/^\d{6}$/, "Pincode must be 6 digits"),
 });
+
+const COUNTRIES = [
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "Australia",
+  "India",
+  "Germany",
+  "France",
+  "Japan",
+  "Brazil",
+  "Singapore"
+];
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
@@ -32,6 +48,7 @@ export default function ProfilePage() {
       fullName: "Jane Doe",
       email: "jane.doe@example.com",
       phone: "9876543210",
+      country: "United States",
       pincode: "110001",
     },
   });
@@ -139,6 +156,31 @@ export default function ProfilePage() {
                       <FormControl>
                         <Input placeholder="10-digit mobile number" type="tel" {...field} className="bg-card" />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country <span className="text-destructive">*</span></FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="bg-card">
+                            <SelectValue placeholder="Select a country" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {COUNTRIES.map((country) => (
+                            <SelectItem key={country} value={country}>
+                              {country}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
