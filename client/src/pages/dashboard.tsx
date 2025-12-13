@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { Transaction, MOCK_TRANSACTIONS } from "@/lib/mock-data";
@@ -21,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dashboard() {
+  const [, setLocation] = useLocation();
   const { theme, setTheme } = useTheme();
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [loading, setLoading] = useState(true);
@@ -74,7 +76,7 @@ export default function Dashboard() {
                <Bell className="h-5 w-5" />
                <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-background" />
              </Button>
-            <Avatar className="h-8 w-8 cursor-pointer border-2 border-primary/20">
+            <Avatar className="h-8 w-8 cursor-pointer border-2 border-primary/20" onClick={() => setLocation("/profile")}>
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
