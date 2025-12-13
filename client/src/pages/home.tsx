@@ -112,7 +112,7 @@ export default function HomePage() {
             </div>
             
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-md">FinTrack</h1>
+              <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-md">kaasutracker</h1>
               <p className="text-xl text-gray-200 font-light leading-relaxed drop-shadow-sm">
                 "{welcomeMessage}"
               </p>
