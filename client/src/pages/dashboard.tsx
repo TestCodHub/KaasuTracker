@@ -75,7 +75,7 @@ export default function Dashboard() {
             <Button variant="ghost" size="icon" className="rounded-full -ml-2" onClick={handleLogout}>
               <LogOut className="h-6 w-6" />
             </Button>
-            <h1 className="text-xl font-bold tracking-tight">kaasutracker</h1>
+            <h1 className="text-xl font-bold tracking-tight">KaasuTracker</h1>
           </div>
           <div className="flex items-center gap-2">
              <Button variant="ghost" size="icon" className="rounded-full relative">
