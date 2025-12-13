@@ -16,6 +16,8 @@ const WELCOME_MESSAGES = [
   "Invest in yourself by tracking every penny."
 ];
 
+import generatedImage from '@assets/generated_images/minimalist_finance_and_budget_abstract_background.png';
+
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [step, setStep] = useState<"welcome" | "mobile" | "otp" | "permissions" | "biometric-setup" | "setup-pin">("welcome");
@@ -83,9 +85,16 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 relative overflow-hidden">
       
-      {/* Abstract Background Shapes */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-3xl -z-10" />
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center" 
+        style={{ backgroundImage: `url(${generatedImage})` }}
+      />
+      <div className="absolute inset-0 z-0 bg-background/80 backdrop-blur-[2px]" />
+
+      {/* Abstract Background Shapes (Optional - can remove if image is enough, but kept for depth) */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-3xl z-0 mix-blend-overlay" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/20 rounded-full blur-3xl z-0 mix-blend-overlay" />
 
       <AnimatePresence mode="wait">
         
@@ -96,7 +105,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="w-full max-w-md text-center space-y-8"
+            className="w-full max-w-md text-center space-y-8 relative z-10"
           >
             <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
               <Sparkles size={40} />
@@ -127,7 +136,7 @@ export default function HomePage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="w-full max-w-md"
+            className="w-full max-w-md relative z-10"
           >
             <Button variant="ghost" size="sm" className="mb-6 -ml-2" onClick={() => setStep("welcome")}>
               Back
@@ -161,7 +170,7 @@ export default function HomePage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="w-full max-w-md"
+            className="w-full max-w-md relative z-10"
           >
             <Button variant="ghost" size="sm" className="mb-6 -ml-2" onClick={() => setStep("mobile")}>
               Back
@@ -198,7 +207,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
-            className="w-full max-w-md"
+            className="w-full max-w-md relative z-10"
           >
             <h2 className="text-2xl font-bold mb-6 text-center">To serve you better</h2>
             
@@ -253,7 +262,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
-            className="w-full max-w-md text-center"
+            className="w-full max-w-md text-center relative z-10"
           >
             <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 text-primary animate-pulse">
               <Fingerprint size={48} />
@@ -285,7 +294,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
-            className="w-full max-w-md text-center"
+            className="w-full max-w-md text-center relative z-10"
           >
             <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 text-primary">
               <Lock size={48} />
