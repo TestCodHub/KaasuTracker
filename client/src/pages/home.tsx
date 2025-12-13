@@ -16,7 +16,7 @@ const WELCOME_MESSAGES = [
   "Invest in yourself by tracking every penny."
 ];
 
-import generatedImage from '@assets/generated_images/minimalist_finance_and_budget_abstract_background.png';
+import generatedImage from '@assets/generated_images/dark_modern_finance_background_with_glowing_graphs.png';
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
@@ -83,18 +83,18 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
       
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center" 
         style={{ backgroundImage: `url(${generatedImage})` }}
       />
-      <div className="absolute inset-0 z-0 bg-background/80 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 z-0 bg-black/40 backdrop-blur-[1px]" />
 
       {/* Abstract Background Shapes (Optional - can remove if image is enough, but kept for depth) */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-3xl z-0 mix-blend-overlay" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/20 rounded-full blur-3xl z-0 mix-blend-overlay" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/20 rounded-full blur-3xl z-0 mix-blend-screen opacity-50" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/20 rounded-full blur-3xl z-0 mix-blend-screen opacity-50" />
 
       <AnimatePresence mode="wait">
         
@@ -107,22 +107,22 @@ export default function HomePage() {
             exit={{ opacity: 0, y: -20 }}
             className="w-full max-w-md text-center space-y-8 relative z-10"
           >
-            <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
+            <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-400 border border-white/10 shadow-2xl">
               <Sparkles size={40} />
             </div>
             
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight">FinTrack</h1>
-              <p className="text-xl text-muted-foreground font-light leading-relaxed">
+              <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-md">FinTrack</h1>
+              <p className="text-xl text-gray-200 font-light leading-relaxed drop-shadow-sm">
                 "{welcomeMessage}"
               </p>
             </div>
 
             <div className="pt-8 space-y-3">
-              <Button size="lg" className="w-full h-12 text-base" onClick={() => setStep("mobile")}>
+              <Button size="lg" className="w-full h-12 text-base bg-blue-600 hover:bg-blue-500 text-white border-none shadow-lg shadow-blue-900/20" onClick={() => setStep("mobile")}>
                 Get Started
               </Button>
-              <Button variant="ghost" className="w-full">
+              <Button variant="ghost" className="w-full text-gray-300 hover:text-white hover:bg-white/10">
                 Already have an account? Login
               </Button>
             </div>
@@ -138,25 +138,25 @@ export default function HomePage() {
             exit={{ opacity: 0, x: -20 }}
             className="w-full max-w-md relative z-10"
           >
-            <Button variant="ghost" size="sm" className="mb-6 -ml-2" onClick={() => setStep("welcome")}>
+            <Button variant="ghost" size="sm" className="mb-6 -ml-2 text-gray-300 hover:text-white hover:bg-white/10" onClick={() => setStep("welcome")}>
               Back
             </Button>
             
-            <h2 className="text-2xl font-bold mb-2">What's your number?</h2>
-            <p className="text-muted-foreground mb-8">We'll send you a verification code.</p>
+            <h2 className="text-2xl font-bold mb-2 text-white">What's your number?</h2>
+            <p className="text-gray-300 mb-8">We'll send you a verification code.</p>
 
             <form onSubmit={handleMobileSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Input 
                   type="tel" 
                   placeholder="Mobile Number" 
-                  className="h-14 text-lg bg-card"
+                  className="h-14 text-lg bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-blue-500"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   maxLength={10}
                 />
               </div>
-              <Button type="submit" size="lg" className="w-full h-12">
+              <Button type="submit" size="lg" className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white border-none">
                 Send OTP <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
@@ -172,29 +172,29 @@ export default function HomePage() {
             exit={{ opacity: 0, x: -20 }}
             className="w-full max-w-md relative z-10"
           >
-            <Button variant="ghost" size="sm" className="mb-6 -ml-2" onClick={() => setStep("mobile")}>
+            <Button variant="ghost" size="sm" className="mb-6 -ml-2 text-gray-300 hover:text-white hover:bg-white/10" onClick={() => setStep("mobile")}>
               Back
             </Button>
 
-            <h2 className="text-2xl font-bold mb-2">Verify it's you</h2>
-            <p className="text-muted-foreground mb-8">Enter the code sent to +91 {mobile}</p>
+            <h2 className="text-2xl font-bold mb-2 text-white">Verify it's you</h2>
+            <p className="text-gray-300 mb-8">Enter the code sent to +91 {mobile}</p>
 
             <div className="flex justify-center mb-8">
               <InputOTP maxLength={4} value={otp} onChange={(value) => setOtp(value)}>
                 <InputOTPGroup>
-                  <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
-                  <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
-                  <InputOTPSlot index={2} className="h-14 w-14 text-lg" />
-                  <InputOTPSlot index={3} className="h-14 w-14 text-lg" />
+                  <InputOTPSlot index={0} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
+                  <InputOTPSlot index={1} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
+                  <InputOTPSlot index={2} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
+                  <InputOTPSlot index={3} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
                 </InputOTPGroup>
               </InputOTP>
             </div>
 
-            <Button onClick={handleVerifyOTP} size="lg" className="w-full h-12" disabled={otp.length !== 4}>
+            <Button onClick={handleVerifyOTP} size="lg" className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white border-none" disabled={otp.length !== 4}>
               Verify & Login
             </Button>
             
-            <p className="text-center mt-4 text-sm text-muted-foreground cursor-pointer hover:text-primary">
+            <p className="text-center mt-4 text-sm text-gray-400 cursor-pointer hover:text-white">
               Resend Code in 30s
             </p>
           </motion.div>
@@ -209,47 +209,47 @@ export default function HomePage() {
             exit={{ opacity: 0, scale: 1.05 }}
             className="w-full max-w-md relative z-10"
           >
-            <h2 className="text-2xl font-bold mb-6 text-center">To serve you better</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center text-white">To serve you better</h2>
             
             <div className="space-y-4 mb-8">
-              <Card className="border-none shadow-sm bg-secondary/50">
+              <Card className="border-white/10 shadow-sm bg-white/5 backdrop-blur-md">
                 <CardContent className="flex items-center gap-4 p-4">
-                  <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-200 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-full bg-blue-500/20 text-blue-300 flex items-center justify-center">
                     <MessageSquare size={20} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold">SMS Access</h4>
-                    <p className="text-xs text-muted-foreground">To automatically track your expenses.</p>
+                    <h4 className="font-semibold text-white">SMS Access</h4>
+                    <p className="text-xs text-gray-300">To automatically track your expenses.</p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-sm bg-secondary/50">
+              <Card className="border-white/10 shadow-sm bg-white/5 backdrop-blur-md">
                 <CardContent className="flex items-center gap-4 p-4">
-                  <div className="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-200 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-full bg-green-500/20 text-green-300 flex items-center justify-center">
                     <Users size={20} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold">Contact Access</h4>
-                    <p className="text-xs text-muted-foreground">To easily send money to friends.</p>
+                    <h4 className="font-semibold text-white">Contact Access</h4>
+                    <p className="text-xs text-gray-300">To easily send money to friends.</p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-sm bg-secondary/50">
+              <Card className="border-white/10 shadow-sm bg-white/5 backdrop-blur-md">
                 <CardContent className="flex items-center gap-4 p-4">
-                  <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-200 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center">
                     <ShieldCheck size={20} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold">Biometric Access</h4>
-                    <p className="text-xs text-muted-foreground">For secure and fast login.</p>
+                    <h4 className="font-semibold text-white">Biometric Access</h4>
+                    <p className="text-xs text-gray-300">For secure and fast login.</p>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <Button onClick={handlePermissions} size="lg" className="w-full h-12">
+            <Button onClick={handlePermissions} size="lg" className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white border-none">
               Allow Permissions
             </Button>
           </motion.div>
@@ -264,23 +264,23 @@ export default function HomePage() {
             exit={{ opacity: 0, scale: 1.05 }}
             className="w-full max-w-md text-center relative z-10"
           >
-            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 text-primary animate-pulse">
+            <div className="w-24 h-24 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-8 text-blue-400 animate-pulse border border-white/10">
               <Fingerprint size={48} />
             </div>
 
-            <h2 className="text-2xl font-bold mb-2">Secure your account</h2>
-            <p className="text-muted-foreground mb-8">
+            <h2 className="text-2xl font-bold mb-2 text-white">Secure your account</h2>
+            <p className="text-gray-300 mb-8">
               Setup Fingerprint or Face ID for faster login next time.
             </p>
 
             <div className="space-y-3">
-              <Button onClick={handleBiometricSetup} size="lg" className="w-full h-12">
+              <Button onClick={handleBiometricSetup} size="lg" className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white border-none">
                 Enable Biometric
               </Button>
-              <Button variant="ghost" className="w-full" onClick={() => setStep("setup-pin")}>
+              <Button variant="ghost" className="w-full text-gray-300 hover:text-white hover:bg-white/10" onClick={() => setStep("setup-pin")}>
                 Use PIN Instead
               </Button>
-              <Button variant="link" className="w-full text-muted-foreground" onClick={handleSkipBiometric}>
+              <Button variant="link" className="w-full text-gray-400 hover:text-white" onClick={handleSkipBiometric}>
                 Skip for now
               </Button>
             </div>
@@ -296,12 +296,12 @@ export default function HomePage() {
             exit={{ opacity: 0, scale: 1.05 }}
             className="w-full max-w-md text-center relative z-10"
           >
-            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 text-primary">
+            <div className="w-24 h-24 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-8 text-blue-400 border border-white/10">
               <Lock size={48} />
             </div>
 
-            <h2 className="text-2xl font-bold mb-2">Create a PIN</h2>
-            <p className="text-muted-foreground mb-8">
+            <h2 className="text-2xl font-bold mb-2 text-white">Create a PIN</h2>
+            <p className="text-gray-300 mb-8">
               Set a 4-digit PIN for quick access.
             </p>
 
@@ -313,15 +313,15 @@ export default function HomePage() {
                  }
               }}>
                 <InputOTPGroup>
-                  <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
-                  <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
-                  <InputOTPSlot index={2} className="h-14 w-14 text-lg" />
-                  <InputOTPSlot index={3} className="h-14 w-14 text-lg" />
+                  <InputOTPSlot index={0} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
+                  <InputOTPSlot index={1} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
+                  <InputOTPSlot index={2} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
+                  <InputOTPSlot index={3} className="h-14 w-14 text-lg bg-white/10 border-white/20 text-white" />
                 </InputOTPGroup>
               </InputOTP>
             </div>
 
-            <Button variant="ghost" className="w-full" onClick={() => setStep("biometric-setup")}>
+            <Button variant="ghost" className="w-full text-gray-300 hover:text-white hover:bg-white/10" onClick={() => setStep("biometric-setup")}>
               Use Biometric Instead
             </Button>
           </motion.div>
