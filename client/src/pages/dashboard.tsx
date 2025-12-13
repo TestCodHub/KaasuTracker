@@ -13,7 +13,8 @@ import {
   Search,
   Wallet,
   TrendingDown,
-  ArrowUpRight
+  ArrowUpRight,
+  LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,11 @@ export default function Dashboard() {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setLocation("/");
+  };
 
   const handleSMSScan = () => {
     // Add some dummy "new" transactions on scan
@@ -66,8 +72,8 @@ export default function Dashboard() {
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-xl border-b border-border p-4">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="rounded-full -ml-2">
-              <Menu className="h-6 w-6" />
+            <Button variant="ghost" size="icon" className="rounded-full -ml-2" onClick={handleLogout}>
+              <LogOut className="h-6 w-6" />
             </Button>
             <h1 className="text-xl font-bold tracking-tight">FinTrack</h1>
           </div>
