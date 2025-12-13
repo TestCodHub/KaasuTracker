@@ -19,6 +19,7 @@ export const CATEGORIES = [
 ];
 
 export const MOCK_TRANSACTIONS: Transaction[] = [
+  // May 2024 (Current Month in Mock)
   {
     id: "1",
     date: "2024-05-12",
@@ -106,6 +107,35 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Cinema City",
     amount: 32.00,
     category: "Entertainment",
+    type: "debit",
+    source: "SMS",
+  },
+  // April 2024
+  {
+    id: "11",
+    date: "2024-04-20",
+    merchant: "Target",
+    amount: 65.20,
+    category: "Shopping",
+    type: "debit",
+    source: "Bank",
+  },
+  {
+    id: "12",
+    date: "2024-04-15",
+    merchant: "Sushi Place",
+    amount: 42.00,
+    category: "Food & Dining",
+    type: "debit",
+    source: "Manual",
+  },
+  // May 2023
+  {
+    id: "13",
+    date: "2023-05-10",
+    merchant: "Old Navy",
+    amount: 35.50,
+    category: "Shopping",
     type: "debit",
     source: "SMS",
   },

@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { Transaction, MOCK_TRANSACTIONS } from "@/lib/mock-data";
 import { ExpenseChart } from "@/components/expense-chart";
@@ -14,19 +14,34 @@ import {
   Wallet,
   TrendingDown,
   ArrowUpRight,
-  LogOut
+  LogOut,
+  Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const YEARS = ["2023", "2024", "2025"];
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { theme, setTheme } = useTheme();
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [loading, setLoading] = useState(true);
+
+  // Filter State
+  const [filterType, setFilterType] = useState<"current-month" | "custom" | "all-time">("current-month");
+  const [selectedMonth, setSelectedMonth] = useState<string>("May"); // Default to Mock Data current month
+  const [selectedYear, setSelectedYear] = useState<string>("2024");
 
   // Simulate initial load
   useEffect(() => {
@@ -53,7 +68,28 @@ export default function Dashboard() {
     setTransactions(prev => [newTx, ...prev]);
   };
 
-  const totalSpent = transactions.reduce((acc, curr) => acc + curr.amount, 0);
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter(t => {
+      const date = new Date(t.date);
+      const txMonth = MONTHS[date.getMonth()];
+      const txYear = date.getFullYear().toString();
+
+      if (filterType === "all-time") return true;
+      
+      if (filterType === "current-month") {
+        // For demo purposes, "Current Month" is May 2024 as per mock data
+        return txMonth === "May" && txYear === "2024";
+      }
+
+      if (filterType === "custom") {
+        return txMonth === selectedMonth && txYear === selectedYear;
+      }
+      
+      return true;
+    });
+  }, [transactions, filterType, selectedMonth, selectedYear]);
+
+  const totalSpent = filteredTransactions.reduce((acc, curr) => acc + curr.amount, 0);
 
   if (loading) {
     return (
@@ -134,16 +170,57 @@ export default function Dashboard() {
 
         {/* Analytics Block */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-lg">Monthly Expenses</h3>
-            <span className="text-sm text-muted-foreground bg-secondary px-2 py-1 rounded-md">
-              May 2024
-            </span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h3 className="font-semibold text-lg">Spending Breakdown</h3>
+            
+            <div className="flex items-center gap-2">
+              <Select 
+                value={filterType} 
+                onValueChange={(val: any) => setFilterType(val)}
+              >
+                <SelectTrigger className="w-[140px] h-8 text-xs bg-background">
+                  <SelectValue placeholder="Filter By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="current-month">Current Month</SelectItem>
+                  <SelectItem value="custom">Select Date</SelectItem>
+                  <SelectItem value="all-time">All Time</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {filterType === "custom" && (
+                <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-5">
+                  <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                    <SelectTrigger className="w-[100px] h-8 text-xs bg-background">
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MONTHS.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={selectedYear} onValueChange={setSelectedYear}>
+                    <SelectTrigger className="w-[80px] h-8 text-xs bg-background">
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {YEARS.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-card rounded-3xl p-4 shadow-sm border border-border">
-              <ExpenseChart transactions={transactions} />
+              {filteredTransactions.length > 0 ? (
+                <ExpenseChart transactions={filteredTransactions} />
+              ) : (
+                <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+                  No expenses found for this period
+                </div>
+              )}
             </div>
             
             <div className="flex flex-col gap-4">
@@ -154,13 +231,13 @@ export default function Dashboard() {
                   <TrendingDown className="text-red-500 h-6 w-6" />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  $420 more than last month
+                  {filterType === 'all-time' ? 'Lifetime spending' : 'Selected period total'}
                 </p>
               </div>
               
                <div className="bg-card rounded-3xl p-6 shadow-sm border border-border">
                   <h4 className="font-medium mb-4 text-sm">Export Data</h4>
-                  <ExportButtons transactions={transactions} />
+                  <ExportButtons transactions={filteredTransactions} />
                </div>
             </div>
           </div>
@@ -169,7 +246,7 @@ export default function Dashboard() {
         {/* Transactions List */}
         <section className="pb-20">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-lg">Recent Transactions</h3>
+            <h3 className="font-semibold text-lg">Transactions</h3>
             <Button variant="ghost" size="sm" className="text-primary">See All</Button>
           </div>
 
@@ -179,39 +256,46 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-3">
-            <AnimatePresence>
-              {transactions.map((tx, i) => (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  key={tx.id}
-                  className="group flex items-center justify-between p-4 bg-card hover:bg-accent/50 transition-colors rounded-2xl border border-border/50 shadow-sm"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-xl">
-                      {tx.category === 'Food & Dining' ? '🍔' : 
-                       tx.category === 'Transportation' ? '🚗' : 
-                       tx.category === 'Shopping' ? '🛍️' : 
-                       tx.category === 'Entertainment' ? '🎬' : '💸'}
-                    </div>
-                    <div>
-                      <p className="font-medium leading-none">{tx.merchant}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-muted-foreground">{tx.date}</span>
-                        {tx.source === 'SMS' && (
-                          <span className="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-1.5 py-0.5 rounded font-medium">
-                            SMS
-                          </span>
-                        )}
+            <AnimatePresence mode="popLayout">
+              {filteredTransactions.length > 0 ? (
+                filteredTransactions.map((tx, i) => (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ delay: i * 0.05 }}
+                    key={tx.id}
+                    className="group flex items-center justify-between p-4 bg-card hover:bg-accent/50 transition-colors rounded-2xl border border-border/50 shadow-sm"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-xl">
+                        {tx.category === 'Food & Dining' ? '🍔' : 
+                        tx.category === 'Transportation' ? '🚗' : 
+                        tx.category === 'Shopping' ? '🛍️' : 
+                        tx.category === 'Entertainment' ? '🎬' : '💸'}
+                      </div>
+                      <div>
+                        <p className="font-medium leading-none">{tx.merchant}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">{tx.date}</span>
+                          {tx.source === 'SMS' && (
+                            <span className="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-1.5 py-0.5 rounded font-medium">
+                              SMS
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="font-mono font-medium">
-                    -${tx.amount.toFixed(2)}
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="font-mono font-medium">
+                      -${tx.amount.toFixed(2)}
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  No transactions found for the selected period.
+                </div>
+              )}
             </AnimatePresence>
           </div>
         </section>
