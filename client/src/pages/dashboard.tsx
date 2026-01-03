@@ -5,29 +5,49 @@ import { Transaction, MOCK_TRANSACTIONS } from "@/lib/mock-data";
 import { ExpenseChart } from "@/components/expense-chart";
 import { SMSParser } from "@/components/sms-parser";
 import { ExportButtons } from "@/components/export-buttons";
-import { 
-  Bell, 
-  Settings, 
-  Menu, 
-  Plus, 
+import {
+  Bell,
+  Settings,
+  Menu,
+  Plus,
   Search,
   Wallet,
   TrendingDown,
   ArrowUpRight,
   LogOut,
-  Calendar
+  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const YEARS = ["2023", "2024", "2025"];
@@ -35,11 +55,14 @@ const YEARS = ["2023", "2024", "2025"];
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { theme, setTheme } = useTheme();
-  const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
+  const [transactions, setTransactions] =
+    useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [loading, setLoading] = useState(true);
 
   // Filter State
-  const [filterType, setFilterType] = useState<"current-month" | "custom" | "all-time">("current-month");
+  const [filterType, setFilterType] = useState<
+    "current-month" | "custom" | "all-time"
+  >("current-month");
   const [selectedMonth, setSelectedMonth] = useState<string>("May"); // Default to Mock Data current month
   const [selectedYear, setSelectedYear] = useState<string>("2024");
 
@@ -58,24 +81,24 @@ export default function Dashboard() {
     // Add some dummy "new" transactions on scan
     const newTx: Transaction = {
       id: Math.random().toString(),
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       merchant: "NEW SMS FOUND",
-      amount: 45.00,
+      amount: 45.0,
       category: "Uncategorized",
       type: "debit",
-      source: "SMS"
+      source: "SMS",
     };
-    setTransactions(prev => [newTx, ...prev]);
+    setTransactions((prev) => [newTx, ...prev]);
   };
 
   const filteredTransactions = useMemo(() => {
-    return transactions.filter(t => {
+    return transactions.filter((t) => {
       const date = new Date(t.date);
       const txMonth = MONTHS[date.getMonth()];
       const txYear = date.getFullYear().toString();
 
       if (filterType === "all-time") return true;
-      
+
       if (filterType === "current-month") {
         // For demo purposes, "Current Month" is May 2024 as per mock data
         return txMonth === "May" && txYear === "2024";
@@ -84,19 +107,24 @@ export default function Dashboard() {
       if (filterType === "custom") {
         return txMonth === selectedMonth && txYear === selectedYear;
       }
-      
+
       return true;
     });
   }, [transactions, filterType, selectedMonth, selectedYear]);
 
-  const totalSpent = filteredTransactions.reduce((acc, curr) => acc + curr.amount, 0);
+  const totalSpent = filteredTransactions.reduce(
+    (acc, curr) => acc + curr.amount,
+    0,
+  );
 
   if (loading) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-          <p className="text-muted-foreground font-medium animate-pulse">Loading Finances...</p>
+          <p className="text-muted-foreground font-medium animate-pulse">
+            Loading Finances...
+          </p>
         </div>
       </div>
     );
@@ -108,17 +136,29 @@ export default function Dashboard() {
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-xl border-b border-border p-4">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="rounded-full -ml-2" onClick={handleLogout}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full -ml-2"
+              onClick={handleLogout}
+            >
               <LogOut className="h-6 w-6" />
             </Button>
             <h1 className="text-xl font-bold tracking-tight">KaasuTracker</h1>
           </div>
           <div className="flex items-center gap-2">
-             <Button variant="ghost" size="icon" className="rounded-full relative">
-               <Bell className="h-5 w-5" />
-               <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-background" />
-             </Button>
-            <Avatar className="h-8 w-8 cursor-pointer border-2 border-primary/20" onClick={() => setLocation("/profile")}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full relative"
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-background" />
+            </Button>
+            <Avatar
+              className="h-8 w-8 cursor-pointer border-2 border-primary/20"
+              onClick={() => setLocation("/profile")}
+            >
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -127,41 +167,42 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-2xl mx-auto p-4 space-y-6">
-        
         {/* Balance Card */}
         <section>
           <div className="flex justify-between items-end mb-2 px-1">
-             <h2 className="text-sm font-medium text-muted-foreground">Total Balance</h2>
-             <span className="text-xs font-mono text-green-500 flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-full">
-               <ArrowUpRight size={12} /> +2.4%
-             </span>
+            <h2 className="text-sm font-medium text-muted-foreground">
+              Total Balance
+            </h2>
+            <span className="text-xs font-mono text-green-500 flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-full">
+              <ArrowUpRight size={12} /> +2.4%
+            </span>
           </div>
           <div className="text-4xl font-bold tracking-tight mb-6">
             $12,450<span className="text-muted-foreground/50">.82</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-             <Button 
-                onClick={() => setTheme('blue')} 
-                variant={theme === 'blue' ? "default" : "outline"}
-                className={`w-full ${theme === 'blue' ? 'ring-2 ring-offset-2 ring-blue-500' : ''}`}
-             >
-               Blue
-             </Button>
-             <Button 
-                onClick={() => setTheme('white')} 
-                variant={theme === 'white' ? "default" : "outline"}
-                className={`w-full ${theme === 'white' ? 'ring-2 ring-offset-2 ring-gray-400' : ''}`}
-             >
-               White
-             </Button>
-             <Button 
-                onClick={() => setTheme('black')} 
-                variant={theme === 'black' ? "default" : "outline"}
-                className={`w-full ${theme === 'black' ? 'ring-2 ring-offset-2 ring-gray-900' : ''}`}
-             >
-               Black
-             </Button>
+            <Button
+              onClick={() => setTheme("blue")}
+              variant={theme === "blue" ? "default" : "outline"}
+              className={`w-full ${theme === "blue" ? "ring-2 ring-offset-2 ring-blue-500" : ""}`}
+            >
+              Blue
+            </Button>
+            <Button
+              onClick={() => setTheme("white")}
+              variant={theme === "white" ? "default" : "outline"}
+              className={`w-full ${theme === "white" ? "ring-2 ring-offset-2 ring-gray-400" : ""}`}
+            >
+              White
+            </Button>
+            <Button
+              onClick={() => setTheme("black")}
+              variant={theme === "black" ? "default" : "outline"}
+              className={`w-full ${theme === "black" ? "ring-2 ring-offset-2 ring-gray-900" : ""}`}
+            >
+              Black
+            </Button>
           </div>
         </section>
 
@@ -172,10 +213,10 @@ export default function Dashboard() {
         <section className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h3 className="font-semibold text-lg">Spending Breakdown</h3>
-            
+
             <div className="flex items-center gap-2">
-              <Select 
-                value={filterType} 
+              <Select
+                value={filterType}
                 onValueChange={(val: any) => setFilterType(val)}
               >
                 <SelectTrigger className="w-[140px] h-8 text-xs bg-background">
@@ -190,12 +231,19 @@ export default function Dashboard() {
 
               {filterType === "custom" && (
                 <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-5">
-                  <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <Select
+                    value={selectedMonth}
+                    onValueChange={setSelectedMonth}
+                  >
                     <SelectTrigger className="w-[100px] h-8 text-xs bg-background">
                       <SelectValue placeholder="Month" />
                     </SelectTrigger>
                     <SelectContent>
-                      {MONTHS.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                      {MONTHS.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {m}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
@@ -204,14 +252,18 @@ export default function Dashboard() {
                       <SelectValue placeholder="Year" />
                     </SelectTrigger>
                     <SelectContent>
-                      {YEARS.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                      {YEARS.map((y) => (
+                        <SelectItem key={y} value={y}>
+                          {y}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
               )}
             </div>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-card rounded-3xl p-4 shadow-sm border border-border">
               {filteredTransactions.length > 0 ? (
@@ -222,23 +274,27 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-            
+
             <div className="flex flex-col gap-4">
               <div className="bg-card rounded-3xl p-6 shadow-sm border border-border flex-1 flex flex-col justify-center gap-2">
-                <span className="text-sm text-muted-foreground">Total Spent</span>
+                <span className="text-sm text-muted-foreground">
+                  Total Spent
+                </span>
                 <div className="text-3xl font-bold flex items-center gap-2">
                   ${totalSpent.toFixed(2)}
                   <TrendingDown className="text-red-500 h-6 w-6" />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {filterType === 'all-time' ? 'Lifetime spending' : 'Selected period total'}
+                  {filterType === "all-time"
+                    ? "Lifetime spending"
+                    : "Selected period total"}
                 </p>
               </div>
-              
-               <div className="bg-card rounded-3xl p-6 shadow-sm border border-border">
-                  <h4 className="font-medium mb-4 text-sm">Export Data</h4>
-                  <ExportButtons transactions={filteredTransactions} />
-               </div>
+
+              <div className="bg-card rounded-3xl p-6 shadow-sm border border-border">
+                <h4 className="font-medium mb-4 text-sm">Export Data</h4>
+                <ExportButtons transactions={filteredTransactions} />
+              </div>
             </div>
           </div>
         </section>
@@ -247,12 +303,17 @@ export default function Dashboard() {
         <section className="pb-20">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-lg">Transactions</h3>
-            <Button variant="ghost" size="sm" className="text-primary">See All</Button>
+            <Button variant="ghost" size="sm" className="text-primary">
+              See All
+            </Button>
           </div>
 
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input className="pl-9 bg-secondary/50 border-none" placeholder="Search transactions..." />
+            <Input
+              className="pl-9 bg-secondary/50 border-none"
+              placeholder="Search transactions..."
+            />
           </div>
 
           <div className="space-y-3">
@@ -269,16 +330,25 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center gap-4">
                       <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-xl">
-                        {tx.category === 'Food & Dining' ? '🍔' : 
-                        tx.category === 'Transportation' ? '🚗' : 
-                        tx.category === 'Shopping' ? '🛍️' : 
-                        tx.category === 'Entertainment' ? '🎬' : '💸'}
+                        {tx.category === "Food & Dining"
+                          ? "🍔"
+                          : tx.category === "Transportation"
+                            ? "🚗"
+                            : tx.category === "Shopping"
+                              ? "🛍️"
+                              : tx.category === "Entertainment"
+                                ? "🎬"
+                                : "💸"}
                       </div>
                       <div>
-                        <p className="font-medium leading-none">{tx.merchant}</p>
+                        <p className="font-medium leading-none">
+                          {tx.merchant}
+                        </p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-muted-foreground">{tx.date}</span>
-                          {tx.source === 'SMS' && (
+                          <span className="text-xs text-muted-foreground">
+                            {tx.date}
+                          </span>
+                          {tx.source === "SMS" && (
                             <span className="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-1.5 py-0.5 rounded font-medium">
                               SMS
                             </span>
@@ -300,14 +370,16 @@ export default function Dashboard() {
           </div>
         </section>
       </main>
-      
+
       {/* Floating Action Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <Button size="icon" className="h-14 w-14 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
+        <Button
+          size="icon"
+          className="h-14 w-14 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105"
+        >
           <Plus className="h-6 w-6" />
         </Button>
       </div>
-
     </div>
   );
 }
